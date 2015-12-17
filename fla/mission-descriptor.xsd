@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<!-- top level element -->
+
+	<xs:element name="mission" type="MissionType" />
+
+	<!-- The MissionType -->
+	<xs:complexType name="MissionType">
+		<xs:sequence>
+			<!-- Free text description of the mission. -->
+			<xs:element name="description" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<!-- The cartesian coordinate system used by all other mission elements. -->
+			<xs:element name="coordinateSystemOrigin" type="CoordinateSystemType" minOccurs="1" maxOccurs="1" />
+			<!-- 0 to N asset refers to a file contained within the mission zip file. -->
+			<xs:element name="asset" type="AssetType" minOccurs="0" maxOccurs="unbounded" />
+			<!-- Describes overhead map imagery files contained within the mission zip file. -->
+			<xs:element name="imagery" type="ImageryType" minOccurs="0" maxOccurs="unbounded" />
+			<!-- Contains the guts of the mission definition, including start and goal features. -->
+			<xs:element name="missionInfo" type="MissionInfoType" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+		<!-- The name of this mission -->
+		<xs:attribute name="name" type="xs:string" />
+	</xs:complexType>
+
+	<!-- An asset refers to a file contained within the mission zip file.  Assets are referred to
+	     by other features using the asset's id -->
+	<xs:complexType name="AssetType">
+		<xs:attribute name="type" type="xs:string" />
+		<xs:attribute name="uri" type="xs:anyURI" />
+		<xs:attribute name="id" type="xs:ID" />
+	</xs:complexType>
+
+	<!-- The mission's cartesian coordinate system tied to a point on the earth. -->
+
+	<xs:complexType name="CoordinateSystemType">
+		<xs:attribute name="originX" type="xs:double" />
+		<xs:attribute name="originY" type="xs:double" />
+		<xs:attribute name="latitudeE6" type="xs:double" />
+		<xs:attribute name="longitudeE6" type="xs:double" />
+	</xs:complexType>
+
+	<!-- The mission's major elements.  The most important are mission's start and goal features -->
+	<xs:complexType name="MissionInfoType">
+		<xs:sequence>
+			<xs:element name="start" type="FeatureType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="goal" type="FeatureType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="feature" type="FeatureType" minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="elevationLimitMeter" type="xs:double" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Every feature contains a location and orientation along with references to the feature's assets. -->
+	<xs:complexType name="FeatureType">
+		<xs:sequence>
+			<xs:element name="location" type="LocationType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="orientation" type="OrientationType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="assetRefs" type="xs:IDREFS" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" />
+	</xs:complexType>
+
+	<!-- Describes the orientation of an asset based on degrees relative to north. -->
+	<xs:complexType name="OrientationType">
+		<xs:sequence>
+			<xs:element name="angleDegreesNorth" type="xs:double" />
+			<xs:element name="description" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- There multiple location types supported.  Geodetic, relative and cartesian.
+	     All mission assets will contain relativeLocation and an optional cartesianLocation
+	 -->
+
+	<xs:complexType name="LocationType">
+		<xs:sequence>
+			<xs:element name="geodeticLocation" type="GeodeticLocationType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="relativeLocation" type="RelativeLocationType" minOccurs="0" maxOccurs="1" />
+			<xs:element name="cartesianLocation" type="CartesianLocationType" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" />
+		<xs:attribute name="locationType">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="relative" />
+					<xs:enumeration value="geodetic" />
+					<xs:enumeration value="cartesian" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<!-- A relative location describes the angle and distance to another feature. -->
+	<xs:complexType name="RelativeLocationType">
+		<xs:sequence>
+			<xs:element name="angleDegreesNorth" type="xs:double" />
+			<xs:element name="distanceMeters" type="xs:double" />
+			<xs:element name="relativeTo" type="xs:IDREF" />
+			<xs:element name="aboveGroundElevation" type="xs:double" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- A cartesian coordinate of a mission element. -->
+	<xs:complexType name="CartesianLocationType">
+		<xs:attribute name="xMeter" type="xs:double" />
+		<xs:attribute name="yMeter" type="xs:double" />
+		<xs:attribute name="zMeter" type="xs:double" />
+	</xs:complexType>
+
+	<!-- A geodetic location. -->
+	<xs:complexType name="GeodeticLocationType">
+		<xs:attribute name="latitudeE6" type="xs:double" />
+		<xs:attribute name="longitudeE6" type="xs:double" />
+	</xs:complexType>
+
+	<!-- An overhead map image placed on the mission's cartesian coordinate system. -->
+	<xs:complexType name="ImageryType">
+		<xs:sequence>
+			<xs:element name="upperLeftRegistration" type="CartesianLocationType" />
+		</xs:sequence>
+
+		<xs:attribute name="type" type="xs:string" />
+		<xs:attribute name="uri" type="xs:anyURI" />
+		<xs:attribute name="id" type="xs:ID" />
+		<xs:attribute name="metersPerPixel" type="xs:double" />
+		<xs:attribute name="heightMeter" type="xs:double" />
+		<xs:attribute name="lengthMeter" type="xs:double" />
+		<xs:attribute name="aboveGroundElevation" type="xs:double" />
+
+	</xs:complexType>
+
+</xs:schema>

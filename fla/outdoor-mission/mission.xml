@@ -1,0 +1,70 @@
+<mission name="string" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../mission-descriptor.xsd">
+
+
+	<description>
+		This is a sample outdoor mission in Camp Roberts.
+	</description>
+
+	<!--
+	  This registers our cartisian coordinate system with a point on the earth.
+	  All coordinates in imagery and mission infos are cartesian.
+
+		35.795619, -120.741390
+	-->
+	<coordinateSystemOrigin latitudeE6="35795619" longitudeE6="-120741390" originX="0.0" originY="0.0" />
+
+	<!-- Each asset defines a file within the zip file.  Assets can be referred to by their id. -->
+	<asset type="image/jpeg" uri="/polaris-right.jpg" id="A_ASSET_IMAGE_POLARIS_RIGHT" />
+	<asset type="image/jpeg" uri="/polaris-left.jpg" id="B_ASSET_IMAGE_POLARIS_LEFT" />
+	<asset type="image/jpeg" uri="/polaris-front.jpg" id="C_ASSET_IMAGE_POLARIS_FRONT" />
+	<asset type="image/jpeg" uri="/polaris-back.jpg" id="D_ASSET_IMAGE_POLARIS_RIGHT" />
+	<asset type="image/jpeg" uri="/polaris-top.jpg" id="E_ASSET_IMAGE_POLARIS_TOP" />
+
+	<!---
+		Each imagery element defines an overhead map imagery.
+
+		The upperLeftRegistration indicates the cartesian coordinate of the upper left pixel.
+		upperLeftRegistration along with metersPerPixel allows you to translate a cartesian coordinate to a pixel on the overhead map.
+	-->
+	<imagery id="OVERHEAD_1" heightMeter="300" lengthMeter="300" metersPerPixel=".5" aboveGroundElevation="0.0"
+			type="image/jpeg" uri="/example_mission_outdoor_AN.jpg">
+		<upperLeftRegistration xMeter="0.0" yMeter="0.0" zMeter="0.0" />
+	</imagery>
+
+	<!-- Here is the mission which contains a start and goal.  It can optionally have other feature elements. -->
+	<missionInfo>
+
+		<!--
+			The mission start is represented as a cartesian coordinate.
+
+		-->
+		<start id="START">
+			<location locationType="cartesian">
+				<cartesianLocation xMeter="78" yMeter="-172" zMeter="0.0" />
+			</location>
+		</start>
+
+		<goal id="GOAL">
+			<location locationType="relative">
+				<relativeLocation>
+					<angleDegreesNorth>225</angleDegreesNorth>
+					<distanceMeters>201</distanceMeters>
+					<relativeTo>START</relativeTo>
+					<aboveGroundElevation>0.0</aboveGroundElevation>
+				</relativeLocation>
+			</location>
+			<location locationType="cartesian">
+				<cartesianLocation xMeter="220" yMeter="-30"/>
+			</location>
+			<orientation>
+				<angleDegreesNorth>45.0</angleDegreesNorth>
+				<description>Orientation of the front of the vehicle.</description>
+			</orientation>
+			<assetRefs>A_ASSET_IMAGE_POLARIS_RIGHT B_ASSET_IMAGE_POLARIS_LEFT C_ASSET_IMAGE_POLARIS_FRONT D_ASSET_IMAGE_POLARIS_RIGHT E_ASSET_IMAGE_POLARIS_TOP</assetRefs>
+		</goal>
+
+		<elevationLimitMeter>7</elevationLimitMeter>
+
+	</missionInfo>
+</mission>

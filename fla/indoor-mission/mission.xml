@@ -1,0 +1,65 @@
+<mission name="string" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="/mission-descriptor.xsd">
+
+
+	<description>
+		This is a sample indoor mission in a building at Camp Roberts.
+	</description>
+
+	<!--
+	  This registers our cartisian coordinate system with a point on the earth.
+	  All coordinates in imagery and mission infos are cartesian.
+
+	  35.793769, -120.738691
+	-->
+	<coordinateSystemOrigin latitudeE6="35793769" longitudeE6="-120738691" originX="0.0" originY="0.0" />
+
+	<!-- Each asset defines a file within the zip file.  Assets can be referred to by their id. -->
+	<asset type="image/jpeg" uri="/polaris-right.jpg" id="A_ASSET_IMAGE_POLARIS_RIGHT" />
+	<asset type="image/jpeg" uri="/polaris-left.jpg" id="B_ASSET_IMAGE_POLARIS_LEFT" />
+	<asset type="image/jpeg" uri="/polaris-front.jpg" id="C_ASSET_IMAGE_POLARIS_FRONT" />
+	<asset type="image/jpeg" uri="/polaris-back.jpg" id="D_ASSET_IMAGE_POLARIS_RIGHT" />
+	<asset type="image/jpeg" uri="/polaris-top.jpg" id="E_ASSET_IMAGE_POLARIS_TOP" />
+
+	<!---
+		Each imagery element defines an overhead map imagery.
+
+		The upperLeftRegistration indicates the cartesian coordinate of the upper left pixel.
+		upperLeftRegistration along with metersPerPixel allows you to translate a cartesian coordinate to a pixel on the overhead map.
+
+		This is an overhead image of a building
+	-->
+	<imagery id="OVERHEAD_1" heightMeter="30" lengthMeter="30" metersPerPixel=".25" aboveGroundElevation="0.0"
+			type="image/jpeg" uri="/example_mission_indoor_AN.jpg">
+		<upperLeftRegistration xMeter="0.0" yMeter="0.0" zMeter="0.0" />
+	</imagery>
+
+	<!-- Here is the mission which contains a start and goal.  It can optionally have other feature elements. -->
+	<missionInfo>
+
+		<!--
+			The mission start is represented as a cartesian coordinate.
+			To find the start on OVERHEAD_1
+		-->
+		<start id="START">
+			<location locationType="cartesian">
+				<cartesianLocation xMeter="2.5" yMeter="-20.75" zMeter="0.0" />
+			</location>
+		</start>
+
+		<goal id="GOAL">
+			<location locationType="relative">
+				<relativeLocation>
+					<angleDegreesNorth>245.77</angleDegreesNorth>
+					<distanceMeters>27.5</distanceMeters>
+					<relativeTo>START</relativeTo>
+					<aboveGroundElevation>0.0</aboveGroundElevation>
+				</relativeLocation>
+			</location>
+			<location locationType="cartesian">
+				<cartesianLocation xMeter="27.5" yMeter="-9.5"/>
+			</location>
+			<assetRefs>A_ASSET_IMAGE_POLARIS_RIGHT B_ASSET_IMAGE_POLARIS_LEFT C_ASSET_IMAGE_POLARIS_FRONT D_ASSET_IMAGE_POLARIS_RIGHT E_ASSET_IMAGE_POLARIS_TOP</assetRefs>
+		</goal>
+	</missionInfo>
+</mission>
